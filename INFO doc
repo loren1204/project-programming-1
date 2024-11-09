@@ -1,0 +1,31 @@
+LINKS 
+MUSIC PLAYER PRENSENTATION [draft feel free to add or change anything]
+https://www.canva.com/design/DAGV6AZy_3I/Q0MaOyKDd_kXL-yYJ_G5Hg/edit?utm_content=DAGV6AZy_3I&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
+DOWNLOADING SFML (on VSCODE) 
+https://youtu.be/rZE700aaT5I?si=woSkNXp1UOWLQ9DN
+
+DOWNLOADING SFML (on CLION) 
+https://youtu.be/EXY7MNqKHTc?si=sN0P2JBVo-gn_wdG
+
+step/ goals 
+Step 1 : Plan the Class Structure 
+
+Define Song class 
+Define Music Player class 
+
+Step 2: Set Up SFML 
+Test by running sf::Music play test 
+
+Step 3: Build the Song Class 
+
+Attributes std::string title, std::string artist, std::string filePath 
+Step 4: Implement the MusicPlayer Class 
+
+Step 5: File Operations
+
+Step 6: Playback Functionality 
+
+Step 7: Main Program and UI Loop 
+
+Step 8: Test 
