@@ -37,3 +37,222 @@ Step 6: Playback Functionality
 Step 7: Main Program and UI Loop 
 
 Step 8: Test 
+
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <iostream>
+#include <vector>
+
+sf::Font font;
+sf::Text playText, pauseText, stopText, nextText, prevText;
+sf::RectangleShape playButton, pauseButton, stopButton, nextButton, prevButton;
+sf::Music music;
+bool isPlaying = false;
+size_t currentSongIndex = 0;
+std::vector<std::string> songs;
+
+void loadFont()
+{
+    if (!font.loadFromFile("C:/Sour_Gummy/SourGummy-VariableFont_wdth,wght.ttf"))
+    {
+        std::cerr << "Error loading font!" << std::endl;
+        exit(1);
+    }
+    else
+    {
+        std::cout << "Font loaded successfully." << std::endl;
+    }
+}
+void loadButtons()
+{
+    playButton.setSize(sf::Vector2f(150, 50));
+    playButton.setPosition(100, 100);
+    playButton.setFillColor(sf::Color::White);
+    playText.setFont(font);
+    playText.setString("Play");
+    playText.setCharacterSize(24);
+    playText.setFillColor(sf::Color::Black);
+    playText.setPosition(130, 115);
+
+    pauseButton.setSize(sf::Vector2f(150, 50));
+    pauseButton.setPosition(100, 200);
+    pauseButton.setFillColor(sf::Color::White);
+    pauseText.setFont(font);
+    pauseText.setString("Pause");
+    pauseText.setCharacterSize(24);
+    pauseText.setFillColor(sf::Color::Black);
+    pauseText.setPosition(130, 215);
+
+    stopButton.setSize(sf::Vector2f(150, 50));
+    stopButton.setPosition(100, 300);
+    stopButton.setFillColor(sf::Color::White);
+    stopText.setFont(font);
+    stopText.setString("Stop");
+    stopText.setCharacterSize(24);
+    stopText.setFillColor(sf::Color::Black);
+    stopText.setPosition(130, 315);
+
+    nextButton.setSize(sf::Vector2f(150, 50));
+    nextButton.setPosition(300, 100);
+    nextButton.setFillColor(sf::Color::White);
+    nextText.setFont(font);
+    nextText.setString("Next");
+    nextText.setCharacterSize(24);
+    nextText.setFillColor(sf::Color::Black);
+    nextText.setPosition(330, 115);
+
+    prevButton.setSize(sf::Vector2f(150, 50));
+    prevButton.setPosition(300, 200);
+    prevButton.setFillColor(sf::Color::White);
+    prevText.setFont(font);
+    prevText.setString("Previous");
+    prevText.setCharacterSize(24);
+    prevText.setFillColor(sf::Color::Black);
+    prevText.setPosition(330, 215);
+}
+
+void loadSongs()
+{
+    songs.push_back("C:/songs/endofbeginning.wav");
+    songs.push_back("C:/songs/midnightcity.wav");
+    songs.push_back("C:/songs/dreams.wav");
+
+    if (!music.openFromFile(songs[currentSongIndex]))
+    {
+        std::cerr << "Error loading initial song: " << songs[currentSongIndex] << std::endl;
+        exit(1);
+    }
+
+    std::cout << "Playlist loaded, song index: " << currentSongIndex << std::endl;
+}
+
+void playMusic()
+{
+    if (!isPlaying)
+    {
+        music.play();
+        isPlaying = true;
+        std::cout << "Music is now playing." << std::endl;
+    }
+}
+
+void pauseMusic()
+{
+    if (isPlaying)
+    {
+        music.pause();
+        isPlaying = false;
+        std::cout << "Music is paused." << std::endl;
+    }
+}
+
+void stopMusic()
+{
+    if (isPlaying)
+    {
+        music.stop();
+        isPlaying = false;
+        std::cout << "Music stopped." << std::endl;
+    }
+}
+
+void nextSong()
+{
+    currentSongIndex = (currentSongIndex + 1) % songs.size();
+    if (!music.openFromFile(songs[currentSongIndex]))
+    {
+        std::cerr << "Error loading next song: " << songs[currentSongIndex] << std::endl;
+        exit(1);
+    }
+    if (isPlaying)
+    {
+        music.play();
+    }
+    std::cout << "Next song: " << songs[currentSongIndex] << std::endl;
+}
+
+void prevSong() {
+    currentSongIndex = (currentSongIndex == 0) ? songs.size() - 1 : currentSongIndex - 1;
+    if (!music.openFromFile(songs[currentSongIndex]))
+    {
+        std::cerr << "Error loading previous song: " << songs[currentSongIndex] << std::endl;
+        exit(1);
+    }
+    if (isPlaying)
+    {
+        music.play();
+    }
+    std::cout << "Previous song: " << songs[currentSongIndex] << std::endl;
+}
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(500, 400), "Music Player");
+
+    loadFont();
+    loadButtons();
+    loadSongs();
+
+    std::cout << "Opening window..." << std::endl;
+
+    while (window.isOpen())
+        {
+        sf::Event event;
+        while (window.pollEvent(event))
+            {
+            if (event.type == sf::Event::Closed)
+                {
+                window.close();
+                std::cout << "Window closed." << std::endl;
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed)
+                {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                    {
+                    if (playButton.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
+                    {
+                        playMusic();
+                    }
+
+                    if (pauseButton.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
+                    {
+                        pauseMusic();
+                    }
+
+                    if (stopButton.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
+                    {
+                        stopMusic();
+                    }
+
+                    if (nextButton.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
+                    {
+                        nextSong();
+                    }
+
+                    if (prevButton.getGlobalBounds().contains(window.mapPixelToCoords(sf::Vector2i(event.mouseButton.x, event.mouseButton.y))))
+                    {
+                        prevSong();
+                    }
+                }
+            }
+        }
+
+        window.clear(sf::Color(255, 133, 249));
+
+        window.draw(playButton);
+        window.draw(playText);
+        window.draw(pauseButton);
+        window.draw(pauseText);
+        window.draw(stopButton);
+        window.draw(stopText);
+        window.draw(nextButton);
+        window.draw(nextText);
+        window.draw(prevButton);
+        window.draw(prevText);
+
+        window.display();
+    }
+
+    return 0;
+}
